@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hogwarts School of Witchcraft and Wizardry</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #f0d080;
+    --gold-dark: #8a6a1a;
+    --dark-bg: #0a0a0f;
+    --dark-mid: #0f0f1a;
+    --dark-card: rgba(10, 10, 20, 0.65);
+    --white: #e8e0d0;
+    --glow: rgba(201, 168, 76, 0.4);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'EB Garamond', serif;
+    background: var(--dark-bg);
+    color: var(--white);
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ─── STARS CANVAS ─── */
+  #stars-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ══════════════════════════════════
+     HOME PAGE
+  ══════════════════════════════════ */
+  #page-home {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Castle background */
+  .castle-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .castle-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 30% 60%, rgba(30,15,60,0.7) 0%, transparent 60%),
+      radial-gradient(ellipse at 70% 40%, rgba(10,20,60,0.5) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 0%, rgba(80,50,130,0.3) 0%, transparent 40%),
+      linear-gradient(180deg, #050510 0%, #0d0d2b 30%, #0a0a1f 60%, #060610 100%);
+  }
+
+  /* Moon */
+  .moon {
+    position: absolute;
+    top: 10%;
+    left: 22%;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 40%, #f0ecd8, #c8bfa0 50%, #a09070 100%);
+    box-shadow: 0 0 60px 20px rgba(220,200,150,0.25), 0 0 120px 50px rgba(200,180,120,0.1);
+    animation: moonGlow 6s ease-in-out infinite alternate;
+  }
+
+  @keyframes moonGlow {
+    from { box-shadow: 0 0 60px 20px rgba(220,200,150,0.25), 0 0 120px 50px rgba(200,180,120,0.1); }
+    to   { box-shadow: 0 0 80px 30px rgba(220,200,150,0.35), 0 0 160px 70px rgba(200,180,120,0.15); }
+  }
+
+  /* Castle SVG silhouette */
+  .castle-silhouette {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 1400px;
+  }
+
+  /* Mystic wisps */
+  .wisp {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(30px);
+    opacity: 0.15;
+    animation: wispFloat 10s ease-in-out infinite;
+  }
+  .wisp-1 { width: 200px; height: 80px; background: #6ad4ff; top: 40%; left: 5%; animation-delay: 0s; }
+  .wisp-2 { width: 150px; height: 60px; background: #a060ff; top: 55%; right: 8%; animation-delay: -4s; }
+  .wisp-3 { width: 120px; height: 50px; background: #60ffcc; top: 30%; right: 20%; animation-delay: -7s; }
+
+  @keyframes wispFloat {
+    0%, 100% { transform: translateX(0) translateY(0) rotate(-5deg); opacity: 0.12; }
+    50%       { transform: translateX(30px) translateY(-20px) rotate(5deg); opacity: 0.22; }
+  }
+
+  /* Galaxy nebula */
+  .nebula {
+    position: absolute;
+    top: 0; right: 0;
+    width: 45%;
+    height: 55%;
+    background: radial-gradient(ellipse at 60% 30%, rgba(120,60,200,0.15) 0%, rgba(40,80,200,0.1) 40%, transparent 70%);
+    filter: blur(20px);
+  }
+
+  /* ─── NAV ─── */
+  .nav {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 40px;
+  }
+
+  .nav-runes-left, .nav-runes-right {
+    font-family: 'Cinzel', serif;
+    font-size: 18px;
+    letter-spacing: 6px;
+    color: var(--gold);
+    opacity: 0.6;
+    flex: 1;
+  }
+  .nav-runes-right { text-align: right; }
+
+  .nav-links {
+    display: flex;
+    gap: 4px;
+    background: rgba(10,10,20,0.5);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 40px;
+    padding: 8px 12px;
+    backdrop-filter: blur(10px);
+  }
+
+  .nav-link {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(232,224,208,0.7);
+    padding: 8px 24px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    letter-spacing: 1px;
+  }
+
+  .nav-link:hover, .nav-link.active {
+    color: var(--gold);
+    background: rgba(201,168,76,0.15);
+  }
+  .nav-link.active {
+    color: var(--white);
+    background: rgba(201,168,76,0.2);
+    border: 1px solid rgba(201,168,76,0.4);
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    position: relative;
+    z-index: 5;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 40px;
+  }
+
+  .hero-title {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: clamp(40px, 7vw, 90px);
+    font-weight: 700;
+    background: linear-gradient(180deg, #f0d080 0%, #c9a84c 40%, #8a6a1a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-align: center;
+    line-height: 1.1;
+    text-shadow: none;
+    filter: drop-shadow(0 0 30px rgba(201,168,76,0.4));
+    animation: titleAppear 1.5s ease-out both;
+    letter-spacing: 2px;
+  }
+
+  .hero-subtitle {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: clamp(28px, 5vw, 68px);
+    font-weight: 900;
+    background: linear-gradient(180deg, #f0d080 0%, #c9a84c 50%, #6a4a10 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-align: center;
+    letter-spacing: 4px;
+    filter: drop-shadow(0 0 40px rgba(201,168,76,0.5));
+    animation: titleAppear 1.5s ease-out 0.3s both;
+  }
+
+  @keyframes titleAppear {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── CARDS ─── */
+  .cards-row {
+    position: relative;
+    z-index: 6;
+    display: flex;
+    gap: 24px;
+    padding: 50px 40px 80px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: auto;
+  }
+
+  .feature-card {
+    background: var(--dark-card);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 16px;
+    padding: 36px 40px 30px;
+    width: 340px;
+    text-align: center;
+    backdrop-filter: blur(12px);
+    transition: all 0.4s;
+    animation: cardRise 1s ease-out both;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,168,76,0.5), transparent);
+  }
+
+  .feature-card:hover {
+    border-color: rgba(201,168,76,0.5);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(201,168,76,0.1);
+  }
+
+  .feature-card:nth-child(2) { animation-delay: 0.2s; }
+
+  @keyframes cardRise {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-icon {
+    font-size: 52px;
+    margin-bottom: 16px;
+    display: block;
+    filter: drop-shadow(0 0 10px rgba(201,168,76,0.3));
+  }
+
+  .card-title {
+    font-family: 'Cinzel', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gold-light);
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+
+  .card-desc {
+    font-size: 15px;
+    color: rgba(232,224,208,0.65);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .btn {
+    display: inline-block;
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--gold-light);
+    border: 1px solid rgba(201,168,76,0.5);
+    background: rgba(201,168,76,0.08);
+    padding: 10px 28px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+  }
+
+  .btn:hover {
+    background: rgba(201,168,76,0.2);
+    border-color: var(--gold);
+    box-shadow: 0 0 20px rgba(201,168,76,0.2);
+    color: #fff8e8;
+  }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    position: relative;
+    z-index: 10;
+    border-top: 1px solid rgba(201,168,76,0.15);
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: rgba(232,224,208,0.4);
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.5px;
+  }
+
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links span { cursor: pointer; transition: color 0.2s; }
+  .footer-links span:hover { color: var(--gold); }
+
+  /* ═══════════════════════════════════════
+     QUIZ PAGE
+  ═══════════════════════════════════════ */
+  #page-quiz {
+    display: none;
+    min-height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    background: #0a0a0a;
+    position: relative;
+  }
+
+  .quiz-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 60%, rgba(201,168,76,0.04) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 100%, rgba(30,20,10,0.8) 0%, transparent 50%),
+      #080808;
+    z-index: 0;
+  }
+
+  /* Golden sparks */
+  .sparks {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .spark {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--gold-light);
+    animation: sparkFloat linear infinite;
+    opacity: 0;
+  }
+
+  @keyframes sparkFloat {
+    0%   { transform: translateY(100vh) translateX(0) scale(0); opacity: 0; }
+    10%  { opacity: 0.8; }
+    90%  { opacity: 0.4; }
+    100% { transform: translateY(-10vh) translateX(var(--dx, 20px)) scale(0.5); opacity: 0; }
+  }
+
+  /* Progress wand */
+  .progress-bar-wrap {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 900px;
+    padding: 24px 40px 0;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .wand-icon {
+    font-size: 28px;
+    transform: rotate(-15deg);
+    filter: drop-shadow(0 0 8px rgba(201,168,76,0.5));
+    flex-shrink: 0;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 4px;
+    background: rgba(201,168,76,0.15);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light));
+    border-radius: 2px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 10px rgba(201,168,76,0.5);
+    width: 10%;
+  }
+
+  .progress-arrow {
+    font-size: 20px;
+    color: var(--gold);
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+
+  .question-counter {
+    position: relative;
+    z-index: 10;
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: rgba(201,168,76,0.7);
+    margin-top: 10px;
+  }
+
+  .quiz-title {
+    position: relative;
+    z-index: 10;
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: clamp(20px, 3.5vw, 40px);
+    font-weight: 900;
+    letter-spacing: 6px;
+    color: var(--gold);
+    text-align: center;
+    margin-top: 16px;
+    padding: 0 20px;
+    text-shadow: 0 0 30px rgba(201,168,76,0.3);
+  }
+
+  /* Sorting hat */
+  .sorting-hat-wrap {
+    position: relative;
+    z-index: 10;
+    margin-top: 24px;
+  }
+
+  .sorting-hat-svg {
+    width: 200px;
+    height: 200px;
+    filter: drop-shadow(0 0 30px rgba(201,168,76,0.3));
+    animation: hatFloat 4s ease-in-out infinite;
+  }
+
+  @keyframes hatFloat {
+    0%, 100% { transform: translateY(0) rotate(-1deg); }
+    50%       { transform: translateY(-10px) rotate(1deg); }
+  }
+
+  /* Glow ring behind hat */
+  .hat-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%);
+    animation: glowPulse 3s ease-in-out infinite;
+  }
+
+  @keyframes glowPulse {
+    0%, 100% { transform: translate(-50%,-50%) scale(1); opacity: 0.6; }
+    50%       { transform: translate(-50%,-50%) scale(1.3); opacity: 1; }
+  }
+
+  /* Question text */
+  .question-text {
+    position: relative;
+    z-index: 10;
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: clamp(18px, 3vw, 34px);
+    font-weight: 700;
+    color: var(--gold-light);
+    text-align: center;
+    padding: 0 40px;
+    max-width: 900px;
+    margin-top: 28px;
+    text-shadow: 0 0 20px rgba(201,168,76,0.2);
+    animation: fadeSlideIn 0.5s ease-out both;
+  }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Answer buttons */
+  .answers-grid {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 36px;
+    padding: 0 40px;
+    max-width: 900px;
+    width: 100%;
+    animation: fadeSlideIn 0.5s ease-out 0.2s both;
+  }
+
+  .answer-btn {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--gold-light);
+    background: transparent;
+    border: 2px solid rgba(201,168,76,0.5);
+    border-radius: 40px;
+    padding: 16px 36px;
+    cursor: pointer;
+    transition: all 0.3s;
+    min-width: 180px;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .answer-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(201,168,76,0.15), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+    border-radius: 40px;
+  }
+
+  .answer-btn:hover {
+    border-color: var(--gold);
+    color: #fff8e8;
+    box-shadow: 0 0 25px rgba(201,168,76,0.3), inset 0 0 15px rgba(201,168,76,0.08);
+    transform: scale(1.04);
+  }
+  .answer-btn:hover::before { opacity: 1; }
+
+  .answer-btn.selected {
+    border-color: var(--gold-light);
+    background: rgba(201,168,76,0.2);
+    box-shadow: 0 0 30px rgba(201,168,76,0.4);
+    color: #fff8e8;
+  }
+
+  /* Quiz footer */
+  .quiz-footer {
+    position: relative;
+    z-index: 10;
+    margin-top: auto;
+    padding: 30px 40px 24px;
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    color: rgba(201,168,76,0.3);
+    letter-spacing: 1px;
+  }
+
+  /* ─── RESULT SCREEN ─── */
+  #page-result {
+    display: none;
+    min-height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .result-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .result-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    padding: 40px;
+    animation: resultReveal 1s ease-out both;
+  }
+
+  @keyframes resultReveal {
+    from { opacity: 0; transform: scale(0.8); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  .result-house-crest {
+    font-size: 100px;
+    display: block;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 30px var(--house-color, #c9a84c));
+    animation: crestFloat 3s ease-in-out infinite;
+  }
+
+  @keyframes crestFloat {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-12px); }
+  }
+
+  .result-announce {
+    font-family: 'Cinzel', serif;
+    font-size: 20px;
+    color: rgba(201,168,76,0.7);
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .result-house-name {
+    font-family: 'Cinzel Decorative', cursive;
+    font-size: clamp(36px, 7vw, 80px);
+    font-weight: 900;
+    color: var(--house-color, var(--gold));
+    text-shadow: 0 0 40px var(--house-color, rgba(201,168,76,0.5));
+    letter-spacing: 4px;
+    margin-bottom: 20px;
+  }
+
+  .result-desc {
+    font-size: 18px;
+    color: rgba(232,224,208,0.7);
+    max-width: 500px;
+    line-height: 1.8;
+    margin: 0 auto 40px;
+    font-style: italic;
+  }
+
+  .result-traits {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+
+  .trait-tag {
+    font-family: 'Cinzel', serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    padding: 8px 20px;
+    border: 1px solid var(--house-color, var(--gold));
+    border-radius: 20px;
+    color: var(--house-color, var(--gold));
+    background: rgba(0,0,0,0.3);
+    text-transform: uppercase;
+  }
+
+  .btn-retake {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #0a0a0a;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light));
+    border: none;
+    padding: 16px 48px;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+  }
+
+  .btn-retake:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 40px rgba(201,168,76,0.4);
+  }
+
+  /* ─── PAGE TRANSITIONS ─── */
+  .page { animation: pageFadeIn 0.8s ease-out both; }
+
+  @keyframes pageFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #0a0a0a; }
+  ::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.3); border-radius: 3px; }
+
+  /* Decorative divider */
+  .gold-divider {
+    width: 200px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+  .gold-divider::after {
+    content: '✦';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--gold);
+    font-size: 12px;
+    background: #0a0a0a;
+    padding: 0 8px;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="stars-canvas"></canvas>
+
+<!-- ══════════════════════════
+     HOME PAGE
+══════════════════════════ -->
+<div id="page-home" class="page" style="display:flex;">
+
+  <div class="castle-bg">
+    <div class="moon"></div>
+    <div class="nebula"></div>
+    <div class="wisp wisp-1"></div>
+    <div class="wisp wisp-2"></div>
+    <div class="wisp wisp-3"></div>
+
+    <!-- Castle SVG silhouette -->
+    <svg class="castle-silhouette" viewBox="0 0 1400 500" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax slice">
+      <defs>
+        <linearGradient id="castleGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1a1a35"/>
+          <stop offset="100%" stop-color="#060610"/>
+        </linearGradient>
+        <linearGradient id="windowGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f0c060" stop-opacity="0.9"/>
+          <stop offset="100%" stop-color="#c08020" stop-opacity="0.6"/>
+        </linearGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+          <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- Ground -->
+      <rect x="0" y="430" width="1400" height="70" fill="#060610"/>
+      <!-- Rocky base -->
+      <ellipse cx="700" cy="450" rx="750" ry="60" fill="#080812"/>
+
+      <!-- Left cliff -->
+      <polygon points="0,500 0,350 100,330 180,300 200,350 220,500" fill="#0d0d22"/>
+
+      <!-- Far left tower -->
+      <rect x="60" y="200" width="60" height="280" fill="url(#castleGrad)"/>
+      <polygon points="60,200 90,140 120,200" fill="#1a1a30"/>
+      <rect x="68" y="220" width="10" height="16" rx="5" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="82" y="250" width="10" height="16" rx="5" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="68" y="290" width="10" height="16" rx="5" fill="url(#windowGrad)" filter="url(#glow)"/>
+
+      <!-- Left wing -->
+      <rect x="120" y="240" width="130" height="230" fill="url(#castleGrad)"/>
+      <rect x="120" y="190" width="40" height="120" fill="url(#castleGrad)"/>
+      <polygon points="120,190 140,140 160,190" fill="#1a1a30"/>
+      <!-- Battlements left -->
+      <rect x="120" y="235" width="12" height="10" fill="url(#castleGrad)"/>
+      <rect x="138" y="235" width="12" height="10" fill="url(#castleGrad)"/>
+      <rect x="156" y="235" width="12" height="10" fill="url(#castleGrad)"/>
+      <rect x="174" y="235" width="12" height="10" fill="url(#castleGrad)"/>
+      <rect x="192" y="235" width="12" height="10" fill="url(#castleGrad)"/>
+      <rect x="210" y="235" width="12" height="10" fill="url(#castleGrad)"/>
+      <!-- Windows left wing -->
+      <rect x="135" y="260" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="165" y="260" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="195" y="260" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="135" y="310" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="165" y="310" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="195" y="310" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="135" y="360" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="165" y="360" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+
+      <!-- Main central section -->
+      <rect x="250" y="170" width="900" height="320" fill="url(#castleGrad)"/>
+
+      <!-- Central great hall towers -->
+      <!-- Left central tower -->
+      <rect x="270" y="100" width="80" height="350" fill="url(#castleGrad)"/>
+      <polygon points="270,100 310,40 350,100" fill="#151525"/>
+      <rect x="285" y="120" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="308" y="120" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="285" y="165" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="308" y="165" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="285" y="215" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="308" y="215" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="285" y="265" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+
+      <!-- Second left tower -->
+      <rect x="380" y="130" width="70" height="320" fill="url(#castleGrad)"/>
+      <polygon points="380,130 415,75 450,130" fill="#151525"/>
+      <rect x="393" y="155" width="12" height="20" rx="6" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="413" y="155" width="12" height="20" rx="6" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="393" y="200" width="12" height="20" rx="6" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="413" y="200" width="12" height="20" rx="6" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="393" y="250" width="12" height="20" rx="6" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="413" y="250" width="12" height="20" rx="6" fill="url(#windowGrad)" filter="url(#glow)"/>
+
+      <!-- Central round tower -->
+      <rect x="500" y="90" width="100" height="370" fill="url(#castleGrad)"/>
+      <ellipse cx="550" cy="90" rx="50" ry="15" fill="#151525"/>
+      <polygon points="520,90 550,20 580,90" fill="#0f0f20"/>
+      <!-- Round tower windows -->
+      <rect x="520" y="115" width="16" height="26" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="548" y="115" width="16" height="26" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="520" y="165" width="16" height="26" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="548" y="165" width="16" height="26" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="520" y="215" width="16" height="26" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="548" y="215" width="16" height="26" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="520" y="265" width="16" height="26" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="548" y="265" width="16" height="26" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="534" y="315" width="32" height="50" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+
+      <!-- Center body windows (many rows) -->
+      <rect x="640" y="200" width="16" height="24" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="670" y="200" width="16" height="24" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="700" y="200" width="16" height="24" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="730" y="200" width="16" height="24" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="760" y="200" width="16" height="24" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="640" y="245" width="16" height="24" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="670" y="245" width="16" height="24" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="700" y="245" width="16" height="24" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="730" y="245" width="16" height="24" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="760" y="245" width="16" height="24" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="640" y="295" width="16" height="24" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="670" y="295" width="16" height="24" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="700" y="295" width="16" height="24" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="730" y="295" width="16" height="24" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="760" y="295" width="16" height="24" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="640" y="345" width="16" height="24" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="670" y="345" width="16" height="24" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="700" y="345" width="16" height="24" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="730" y="345" width="16" height="24" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="760" y="345" width="16" height="24" rx="8" fill="url(#windowGrad)" filter="url(#glow)"/>
+
+      <!-- Right central tower -->
+      <rect x="820" y="110" width="90" height="355" fill="url(#castleGrad)"/>
+      <polygon points="820,110 865,45 910,110" fill="#151525"/>
+      <rect x="836" y="135" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="858" y="135" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="836" y="180" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="858" y="180" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="836" y="230" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="858" y="230" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="836" y="280" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+
+      <!-- Right wing -->
+      <rect x="940" y="160" width="160" height="310" fill="url(#castleGrad)"/>
+      <!-- Right towers -->
+      <rect x="1000" y="120" width="65" height="340" fill="url(#castleGrad)"/>
+      <polygon points="1000,120 1032,60 1065,120" fill="#151525"/>
+      <rect x="1010" y="145" width="12" height="20" rx="6" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="1030" y="145" width="12" height="20" rx="6" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="1010" y="190" width="12" height="20" rx="6" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="1030" y="190" width="12" height="20" rx="6" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="1010" y="240" width="12" height="20" rx="6" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="1030" y="240" width="12" height="20" rx="6" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <!-- Right wing windows -->
+      <rect x="955" y="185" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="978" y="185" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="955" y="230" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="978" y="230" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="955" y="280" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="978" y="280" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="955" y="330" width="14" height="22" rx="7" fill="url(#windowGrad)" filter="url(#glow)"/>
+
+      <!-- Far right tower -->
+      <rect x="1100" y="210" width="65" height="270" fill="url(#castleGrad)"/>
+      <polygon points="1100,210 1132,155 1165,210" fill="#151525"/>
+      <rect x="1112" y="230" width="10" height="16" rx="5" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="1130" y="250" width="10" height="16" rx="5" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="1112" y="290" width="10" height="16" rx="5" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="1130" y="320" width="10" height="16" rx="5" fill="url(#windowGrad)" filter="url(#glow)"/>
+
+      <!-- Very far right small tower -->
+      <rect x="1240" y="260" width="50" height="240" fill="url(#castleGrad)"/>
+      <polygon points="1240,260 1265,210 1290,260" fill="#151525"/>
+      <rect x="1248" y="280" width="8" height="14" rx="4" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="1262" y="300" width="8" height="14" rx="4" fill="url(#windowGrad)" filter="url(#glow)"/>
+      <rect x="1248" y="330" width="8" height="14" rx="4" fill="url(#windowGrad)" filter="url(#glow)"/>
+
+      <!-- Ground level archway glow -->
+      <ellipse cx="700" cy="480" rx="400" ry="20" fill="rgba(201,168,76,0.05)" filter="url(#glow)"/>
+
+      <!-- Fog layer at bottom -->
+      <rect x="0" y="400" width="1400" height="100" fill="url(#fogGrad)" opacity="0.6"/>
+      <defs>
+        <linearGradient id="fogGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0a0a1f" stop-opacity="0"/>
+          <stop offset="100%" stop-color="#050510" stop-opacity="1"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  </div>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-runes-left">ᚹᛁᛏᚳᚻᚻᚱᚪᚠᛏ</div>
+    <div class="nav-links">
+      <a class="nav-link active" href="#" onclick="showPage('home'); return false;">Home</a>
+      <a class="nav-link" href="#" onclick="showPage('quiz'); return false;">Houses</a>
+      <a class="nav-link" href="#">Spells</a>
+      <a class="nav-link" href="#">Potions</a>
+    </div>
+    <div class="nav-runes-right">ᚹᛁᛉᚪᚱᛞᚱᚣ</div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-title">Welcome to</div>
+    <div class="hero-subtitle">Hogwarts</div>
+  </div>
+
+  <!-- CARDS -->
+  <div class="cards-row">
+    <div class="feature-card">
+      <span class="card-icon">🏰</span>
+      <div class="card-title">Explore the Castle</div>
+      <p class="card-desc">Discover hidden secrets and legendary locations.</p>
+      <a class="btn" href="#">Start Exploring</a>
+    </div>
+    <div class="feature-card">
+      <span class="card-icon">🎩</span>
+      <div class="card-title">Take the Sorting Ceremony</div>
+      <p class="card-desc">Find where you truly belong in the wizarding world.</p>
+      <a class="btn" href="#" onclick="showPage('quiz'); return false;">Begin the Quiz</a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div>© 2023 Hogwarts School of Witchcraft and Wizardry. Fan Website. All rights reserved.</div>
+    <div class="footer-links">
+      <span>ⓘ About</span>
+      <span>✉ Contact</span>
+      <span>📋 Terms</span>
+    </div>
+  </footer>
+</div>
+
+
+<!-- ══════════════════════════
+     QUIZ PAGE
+══════════════════════════ -->
+<div id="page-quiz" class="page" style="display:none; flex-direction:column; align-items:center; min-height:100vh; background:#080808;">
+
+  <div class="quiz-bg"></div>
+
+  <!-- Sparks container (filled by JS) -->
+  <div class="sparks" id="sparks-container"></div>
+
+  <!-- Progress bar -->
+  <div class="progress-bar-wrap">
+    <span class="wand-icon">🪄</span>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <span class="progress-arrow">▶</span>
+  </div>
+
+  <div class="question-counter" id="question-counter">Question 1 of 10</div>
+
+  <div class="quiz-title">Hogwarts House Sorting Quiz</div>
+
+  <!-- Sorting Hat SVG -->
+  <div class="sorting-hat-wrap">
+    <div class="hat-glow"></div>
+    <svg class="sorting-hat-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="hatGrad" cx="50%" cy="40%" r="60%">
+          <stop offset="0%" stop-color="#3a3020"/>
+          <stop offset="100%" stop-color="#1a1408"/>
+        </radialGradient>
+        <linearGradient id="hatBrim" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#2a2015"/>
+          <stop offset="100%" stop-color="#0f0c08"/>
+        </linearGradient>
+        <filter id="hatGlow">
+          <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+          <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- Sparkle dots -->
+      <circle cx="45" cy="80" r="2" fill="#c9a84c" opacity="0.6" filter="url(#hatGlow)">
+        <animate attributeName="opacity" values="0.6;0;0.6" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="155" cy="90" r="1.5" fill="#c9a84c" opacity="0.4" filter="url(#hatGlow)">
+        <animate attributeName="opacity" values="0.4;0;0.4" dur="2.5s" begin="0.5s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="100" cy="60" r="1" fill="#f0d080" opacity="0.7" filter="url(#hatGlow)">
+        <animate attributeName="opacity" values="0.7;0;0.7" dur="1.8s" begin="1s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="60" cy="110" r="1.5" fill="#c9a84c" opacity="0.5" filter="url(#hatGlow)">
+        <animate attributeName="opacity" values="0.5;0;0.5" dur="3s" begin="0.3s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="140" cy="65" r="2" fill="#f0d080" opacity="0.4" filter="url(#hatGlow)">
+        <animate attributeName="opacity" values="0.4;0;0.4" dur="2.2s" begin="1.5s" repeatCount="indefinite"/>
+      </circle>
+
+      <!-- Hat brim -->
+      <ellipse cx="100" cy="148" rx="72" ry="14" fill="url(#hatBrim)" stroke="#c9a84c" stroke-width="0.5" opacity="0.8"/>
+      <ellipse cx="100" cy="143" rx="60" ry="10" fill="#1a1408"/>
+
+      <!-- Hat body -->
+      <path d="M40 148 Q42 130 55 118 Q62 110 70 105 Q80 100 90 120 Q95 125 100 118 Q105 105 115 102 Q125 98 135 110 Q145 122 155 135 Q158 140 160 148 Z" fill="url(#hatGrad)" stroke="#8a6a1a" stroke-width="0.5"/>
+
+      <!-- Hat fold/crease lines -->
+      <path d="M90 120 Q92 115 96 108 Q100 100 104 108 Q108 115 110 120" fill="none" stroke="#c9a84c" stroke-width="0.8" opacity="0.4"/>
+      <path d="M70 140 Q75 128 80 118 Q85 108 90 120" fill="none" stroke="#8a6a1a" stroke-width="0.5" opacity="0.3"/>
+      <path d="M130 138 Q125 128 120 116 Q115 105 110 120" fill="none" stroke="#8a6a1a" stroke-width="0.5" opacity="0.3"/>
+
+      <!-- Hat tip (bent/droopy) -->
+      <path d="M90 120 Q88 100 82 80 Q78 62 74 45 Q72 32 78 22 Q84 14 92 20 Q100 26 108 18 Q116 12 122 20 Q128 28 126 42 Q122 58 118 76 Q112 98 110 120" fill="url(#hatGrad)" stroke="#7a5a10" stroke-width="0.5"/>
+
+      <!-- Tip curl -->
+      <path d="M74 45 Q68 38 62 42 Q58 46 64 52 Q70 58 78 55 Q84 52 82 45" fill="#2a2015" stroke="#c9a84c" stroke-width="0.5" opacity="0.6"/>
+
+      <!-- Hat band -->
+      <path d="M42 142 Q60 136 80 134 Q100 132 120 134 Q140 136 158 142" fill="none" stroke="#c9a84c" stroke-width="2.5" opacity="0.5"/>
+      <path d="M44 145 Q62 139 82 137 Q100 135 118 137 Q138 139 156 145" fill="none" stroke="#8a6a1a" stroke-width="1" opacity="0.4"/>
+
+      <!-- Buckle on band -->
+      <rect x="92" y="136" width="16" height="10" rx="2" fill="none" stroke="#c9a84c" stroke-width="1.5" opacity="0.7"/>
+      <rect x="98" y="139" width="4" height="4" fill="#c9a84c" opacity="0.5"/>
+
+      <!-- Face impression (eyes) -->
+      <path d="M78 130 Q82 126 88 128 Q84 132 78 130 Z" fill="#0a0805" opacity="0.6"/>
+      <path d="M112 130 Q118 126 122 128 Q118 132 112 130 Z" fill="#0a0805" opacity="0.6"/>
+      <!-- Nose crease -->
+      <path d="M96 135 Q100 138 104 135" fill="none" stroke="#1a1205" stroke-width="1" opacity="0.4"/>
+    </svg>
+  </div>
+
+  <!-- Question -->
+  <div class="question-text" id="question-text">Which quality do you value most?</div>
+
+  <!-- Answers -->
+  <div class="answers-grid" id="answers-grid"></div>
+
+  <div class="quiz-footer">© 2024 The Wizarding World Fan Site. All rights reserved.</div>
+</div>
+
+
+<!-- ══════════════════════════
+     RESULT PAGE
+══════════════════════════ -->
+<div id="page-result" class="page">
+  <div class="result-bg" id="result-bg"></div>
+  <div class="result-content">
+    <span class="result-house-crest" id="result-crest">⚡</span>
+    <div class="result-announce">The Sorting Hat declares...</div>
+    <div class="result-house-name" id="result-house-name">Gryffindor</div>
+    <div class="gold-divider" style="margin-bottom:24px;"></div>
+    <p class="result-desc" id="result-desc">You belong in Gryffindor!</p>
+    <div class="result-traits" id="result-traits"></div>
+    <button class="btn-retake" onclick="retakeQuiz()">✦ Retake the Quiz ✦</button>
+  </div>
+</div>
+
+
+<script>
+// ══════════════════════════
+//  STARS
+// ══════════════════════════
+const canvas = document.getElementById('stars-canvas');
+const ctx = canvas.getContext('2d');
+let stars = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
+function createStars() {
+  stars = [];
+  for (let i = 0; i < 200; i++) {
+    stars.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height * 0.75,
+      r: Math.random() * 1.5 + 0.2,
+      alpha: Math.random() * 0.8 + 0.2,
+      twinkleSpeed: Math.random() * 0.02 + 0.005,
+      twinkleOffset: Math.random() * Math.PI * 2
+    });
+  }
+}
+
+function drawStars(t) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  stars.forEach(s => {
+    const a = s.alpha * (0.5 + 0.5 * Math.sin(t * s.twinkleSpeed + s.twinkleOffset));
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,240,200,${a})`;
+    ctx.fill();
+  });
+  requestAnimationFrame(tt => drawStars(tt / 1000));
+}
+
+resizeCanvas();
+createStars();
+drawStars(0);
+window.addEventListener('resize', () => { resizeCanvas(); createStars(); });
+
+// ══════════════════════════
+//  SPARKS
+// ══════════════════════════
+function createSparks() {
+  const container = document.getElementById('sparks-container');
+  if (!container) return;
+  container.innerHTML = '';
+  for (let i = 0; i < 40; i++) {
+    const s = document.createElement('div');
+    s.className = 'spark';
+    s.style.left = Math.random() * 100 + '%';
+    s.style.setProperty('--dx', (Math.random() * 80 - 40) + 'px');
+    s.style.animationDuration = (Math.random() * 8 + 6) + 's';
+    s.style.animationDelay = (Math.random() * 8) + 's';
+    s.style.width = s.style.height = (Math.random() * 3 + 1) + 'px';
+    container.appendChild(s);
+  }
+}
+
+// ══════════════════════════
+//  QUIZ DATA
+// ══════════════════════════
+const questions = [
+  {
+    text: "Which quality do you value most?",
+    answers: [
+      { text: "Bravery",   house: "gryffindor" },
+      { text: "Wisdom",    house: "ravenclaw"  },
+      { text: "Ambition",  house: "slytherin"  },
+      { text: "Loyalty",   house: "hufflepuff" }
+    ]
+  },
+  {
+    text: "You find a wounded magical creature on the grounds. What do you do?",
+    answers: [
+      { text: "Rush to help it immediately",        house: "gryffindor" },
+      { text: "Research the best treatment first",  house: "ravenclaw"  },
+      { text: "Alert the Care of Magical Creatures professor", house: "hufflepuff" },
+      { text: "Observe from a safe distance",       house: "slytherin"  }
+    ]
+  },
+  {
+    text: "Which class would you most look forward to at Hogwarts?",
+    answers: [
+      { text: "Defence Against the Dark Arts", house: "gryffindor" },
+      { text: "Ancient Runes",                 house: "ravenclaw"  },
+      { text: "Herbology",                     house: "hufflepuff" },
+      { text: "Potions",                       house: "slytherin"  }
+    ]
+  },
+  {
+    text: "A fellow student is being bullied. You...",
+    answers: [
+      { text: "Step in and confront the bully",   house: "gryffindor" },
+      { text: "Find the most effective solution", house: "ravenclaw"  },
+      { text: "Rally allies and report it",       house: "hufflepuff" },
+      { text: "Use strategy to diffuse it",       house: "slytherin"  }
+    ]
+  },
+  {
+    text: "What would you most like to be remembered for?",
+    answers: [
+      { text: "Heroic acts of courage",        house: "gryffindor" },
+      { text: "Great discoveries and wisdom",  house: "ravenclaw"  },
+      { text: "Kindness and fair deeds",       house: "hufflepuff" },
+      { text: "Power and achievement",         house: "slytherin"  }
+    ]
+  },
+  {
+    text: "Your greatest fear would be...",
+    answers: [
+      { text: "Losing someone you love",       house: "hufflepuff" },
+      { text: "Being powerless",               house: "gryffindor" },
+      { text: "Being thought a fool",          house: "ravenclaw"  },
+      { text: "Failure and obscurity",         house: "slytherin"  }
+    ]
+  },
+  {
+    text: "You find a purse full of Galleons on the street. You...",
+    answers: [
+      { text: "Turn it into a professor at once",     house: "hufflepuff" },
+      { text: "Post notices to find the owner",       house: "gryffindor" },
+      { text: "Deduce who owns it and return it",     house: "ravenclaw"  },
+      { text: "Keep it — finders keepers",            house: "slytherin"  }
+    ]
+  },
+  {
+    text: "On a free afternoon at Hogwarts you would...",
+    answers: [
+      { text: "Fly around on a broomstick",           house: "gryffindor" },
+      { text: "Read in the restricted section",       house: "ravenclaw"  },
+      { text: "Tend the greenhouses with friends",    house: "hufflepuff" },
+      { text: "Practice advanced spells alone",       house: "slytherin"  }
+    ]
+  },
+  {
+    text: "Which magical artefact would you most want?",
+    answers: [
+      { text: "Sword of Gryffindor",    house: "gryffindor" },
+      { text: "Ravenclaw's Diadem",     house: "ravenclaw"  },
+      { text: "Hufflepuff's Cup",       house: "hufflepuff" },
+      { text: "Slytherin's Locket",     house: "slytherin"  }
+    ]
+  },
+  {
+    text: "The Sorting Hat says it sees great potential in you. Which would you choose?",
+    answers: [
+      { text: "Where I'll be bravest",  house: "gryffindor" },
+      { text: "Where I'll learn most",  house: "ravenclaw"  },
+      { text: "Where I'll be happiest", house: "hufflepuff" },
+      { text: "Where I'll be greatest", house: "slytherin"  }
+    ]
+  }
+];
+
+const houseData = {
+  gryffindor: {
+    name: "Gryffindor",
+    crest: "🦁",
+    color: "#c0392b",
+    desc: "Brave at heart, daring in spirit. You possess the courage to face any darkness and the nerve to stand for what is right.",
+    traits: ["Brave", "Chivalrous", "Daring", "Passionate", "Lionhearted"]
+  },
+  ravenclaw: {
+    name: "Ravenclaw",
+    crest: "🦅",
+    color: "#2980b9",
+    desc: "Wit beyond measure is man's greatest treasure. Your sharp mind and thirst for knowledge set you apart from all others.",
+    traits: ["Wise", "Witty", "Creative", "Curious", "Perceptive"]
+  },
+  hufflepuff: {
+    name: "Hufflepuff",
+    crest: "🦡",
+    color: "#d4ac0d",
+    desc: "Loyal, true, and unafraid of toil. You are the heartbeat of Hogwarts — steadfast, kind, and fiercely fair.",
+    traits: ["Loyal", "Patient", "Fair", "Hardworking", "Kind"]
+  },
+  slytherin: {
+    name: "Slytherin",
+    crest: "🐍",
+    color: "#27ae60",
+    desc: "Cunning, ambitious, and resourceful. You have the determination to achieve greatness and the cleverness to forge your own path.",
+    traits: ["Ambitious", "Cunning", "Resourceful", "Determined", "Strategic"]
+  }
+};
+
+// ══════════════════════════
+//  QUIZ STATE
+// ══════════════════════════
+let currentQ = 0;
+let scores = { gryffindor: 0, ravenclaw: 0, hufflepuff: 0, slytherin: 0 };
+
+function renderQuestion() {
+  const q = questions[currentQ];
+  document.getElementById('question-counter').textContent = `Question ${currentQ + 1} of ${questions.length}`;
+  document.getElementById('progress-fill').style.width = `${((currentQ) / questions.length) * 100}%`;
+
+  const qText = document.getElementById('question-text');
+  qText.style.animation = 'none';
+  void qText.offsetWidth;
+  qText.style.animation = 'fadeSlideIn 0.5s ease-out both';
+  qText.textContent = q.text;
+
+  const grid = document.getElementById('answers-grid');
+  grid.style.animation = 'none';
+  void grid.offsetWidth;
+  grid.style.animation = 'fadeSlideIn 0.5s ease-out 0.2s both';
+  grid.innerHTML = '';
+
+  q.answers.forEach(a => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.textContent = a.text;
+    btn.onclick = () => selectAnswer(a.house, btn);
+    grid.appendChild(btn);
+  });
+}
+
+function selectAnswer(house, btn) {
+  document.querySelectorAll('.answer-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  scores[house]++;
+
+  setTimeout(() => {
+    currentQ++;
+    if (currentQ < questions.length) {
+      renderQuestion();
+    } else {
+      showResult();
+    }
+  }, 400);
+}
+
+function showResult() {
+  // Find winning house
+  let winner = Object.entries(scores).reduce((a, b) => b[1] > a[1] ? b : a)[0];
+  const data = houseData[winner];
+
+  // Set result BG
+  const bg = document.getElementById('result-bg');
+  bg.style.background = `radial-gradient(ellipse at 50% 50%, ${data.color}22 0%, transparent 60%), #080808`;
+
+  document.getElementById('result-crest').textContent = data.crest;
+  document.getElementById('result-crest').style.setProperty('filter', `drop-shadow(0 0 40px ${data.color})`);
+  document.getElementById('result-house-name').textContent = data.name;
+  document.getElementById('result-house-name').style.color = data.color;
+  document.getElementById('result-house-name').style.textShadow = `0 0 40px ${data.color}`;
+  document.getElementById('result-desc').textContent = data.desc;
+
+  const traitsDiv = document.getElementById('result-traits');
+  traitsDiv.innerHTML = '';
+  data.traits.forEach(t => {
+    const tag = document.createElement('span');
+    tag.className = 'trait-tag';
+    tag.style.borderColor = data.color;
+    tag.style.color = data.color;
+    tag.textContent = t;
+    traitsDiv.appendChild(tag);
+  });
+
+  showPage('result');
+  document.getElementById('progress-fill').style.width = '100%';
+}
+
+function retakeQuiz() {
+  currentQ = 0;
+  scores = { gryffindor: 0, ravenclaw: 0, hufflepuff: 0, slytherin: 0 };
+  renderQuestion();
+  showPage('quiz');
+}
+
+// ══════════════════════════
+//  PAGE NAVIGATION
+// ══════════════════════════
+function showPage(name) {
+  document.getElementById('page-home').style.display   = name === 'home'   ? 'flex' : 'none';
+  document.getElementById('page-quiz').style.display   = name === 'quiz'   ? 'flex' : 'none';
+  document.getElementById('page-result').style.display = name === 'result' ? 'flex' : 'none';
+
+  if (name === 'quiz') { createSparks(); renderQuestion(); }
+  window.scrollTo(0, 0);
+}
+
+// Init
+renderQuestion();
+</script>
+</body>
+</html>
